@@ -1,0 +1,32 @@
+# Evidence: SQL Injection 
+Access Log (NGINX):
+192.168.35.11 - - [17/Sep/2025:19:53:54 +0000] "GET /vulnerabilities/sqli/?id=1'+OR+'1'='1'--+-&Submit=Submit HTTP/1.1" 403 146 "-" "curl/8.15.0" "-"
+
+Audit JSON (ModSecurity) - trecho:
+{
+  "transaction": {
+    "client_ip": "192.168.35.11",
+    "time_stamp": "Wed Sep 17 19:53:54 2025",
+    "host_ip": "192.168.35.30",
+    "host_port": 8080,
+    "unique_id": "175813883437.518403",
+    "request": {
+      "method": "GET",
+      "uri": "/vulnerabilities/sqli/?id=1'+OR+'1'='1'--+-&Submit=Submit",
+      "headers": { "User-Agent": "curl/8.15.0", "Cookie": "PHPSESSID=test; security=low" }
+    },
+    "response": {
+      "http_code": 403,
+      "body": "<html>...403 Forbidden...</html>"
+    },
+    "producer": { "modsecurity": "ModSecurity v3.0.14", "components": ["OWASP_CRS/4.17.1"] },
+    "messages": [
+      { "message": "SQL Injection Attack Detected via libinjection",
+        "details": { "ruleId": "942100", "data": "Matched Data: ...ARGS:id: 1' OR '1'='1'-- -" }
+      },
+      { "message": "Inbound Anomaly Score Exceeded (Total Score: 5)",
+        "details": { "ruleId": "949110", "data": "" }
+      }
+    ]
+  }
+}

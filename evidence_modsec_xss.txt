@@ -1,0 +1,25 @@
+# Evidence: Cross-Site Scripting
+192.168.35.11 - - [17/Sep/2025:19:55:38 +0000] "GET /vulnerabilities/xss_r/?name=%3Cscript%3Ealert%28%22XSS%22%29%3C/script%3E HTTP/1.1" 403 146 "-" "curl/8.15.0" "-"
+
+Audit JSON (ModSecurity) - trecho (resumido):
+{
+  "transaction": {
+    "client_ip": "192.168.35.11",
+    "time_stamp": "Wed Sep 17 19:55:38 2025",
+    "host_ip": "192.168.35.30",
+    "host_port": 8080,
+    "request": {
+      "method": "GET",
+      "uri": "/vulnerabilities/xss_r/?name=%3Cscript%3Ealert%28%22XSS%22%29%3C/script%3E",
+      "headers": { "User-Agent": "curl/8.15.0", "Cookie": "security=low" }
+    },
+    "response": { "http_code": 403 },
+    "producer": { "modsecurity": "ModSecurity v3.0.14", "components": ["OWASP_CRS/4.17.1"] },
+    "messages": [
+      { "message": "XSS Attack Detected via libinjection", "details": { "ruleId": "941100", "data": "Matched Data: <script>alert(\"XSS\")</script>" } },
+      { "message": "XSS Filter - Category 1: Script Tag Vector", "details": { "ruleId": "941110" } },
+      { "message": "Javascript method detected", "details": { "ruleId": "941390", "data": "Matched Data: alert(" } },
+      { "message": "Inbound Anomaly Score Exceeded (Total Score: 20)", "details": { "ruleId": "949110" } }
+    ]
+  }
+}
