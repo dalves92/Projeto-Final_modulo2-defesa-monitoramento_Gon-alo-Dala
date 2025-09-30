@@ -1,4 +1,4 @@
-# Nota sobre Nmap extraída/interpretada
+# Evidencia sobre Nmap extraída/interpretada
 varreduras de reconhecimento via nmap:
 nmap -sV -sS waf_modsec (192.168.35.30)
 
